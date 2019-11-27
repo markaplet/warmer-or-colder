@@ -4,3 +4,7 @@ Used as part of an arduino based puzzle game where contestants must solve a seri
 ## Reqired Libraries
 * [Dalas Temperature by Miles Burton](https://www.arduinolibraries.info/libraries/dallas-temperature)
 * [OneWire by Paul Stoffregen](https://github.com/PaulStoffregen/OneWire)
+
+## Parts Used
+* DS18B20 Waterproof Temperature Sensors
+* 4.7k Resistor
