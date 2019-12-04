@@ -87,7 +87,6 @@ void setup() {
 void loop() {
   if(start == true){ 
     checkTemp();
-    delay(1000);
   } else if (start == false) {
     congratsParty();
   }
@@ -146,6 +145,7 @@ void checkTemp() {
   lcd.print(PROBE_TEMP_ROUND);
   lcd.print((char) 223);
   lcd.print("F");
+  delay(1000);
 
   #ifdef DEBUG
     Serial.print(Fahrenheit);
