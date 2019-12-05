@@ -14,6 +14,7 @@ NOTES:
 Probe uses a 4.7k resistor between data and vcc. See https://playground.arduino.cc/Learning/OneWire/
 Probe data pin: 8
 I2C LCD: SCL = A5, SDA = A4
+Servo motor = 9
 */
 
 // Temperature Probe Libraries
@@ -24,10 +25,17 @@ I2C LCD: SCL = A5, SDA = A4
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
-#define TEMP_DELTA 40  //Degree difference hotter or colder than base
-//#define DEBUG 1 //Enables serial print debugging
+// Servo Library
+#include <Servo.h>
 
-boolean start = true; // used to toggle running of main loop
+Servo LockServo;        // create servo object to control a servo
+int POS = 0;            // variable to store the servo position
+int LOCKED = 1;         // default lock state
+
+#define TEMP_DELTA 40   //Degree difference hotter or colder than base
+//#define DEBUG 1       //Enables serial print debugging
+
+boolean start = true;   // used to toggle running of main loop
 
 // Temperature Probe Setup
 #define TEMP_SENSOR 8   // Sensor on digital pin 8
@@ -74,6 +82,9 @@ void setup() {
     lcd.createChar ( i, (uint8_t *)charBitmap[i] ); //congrats chars
   }
 
+  LockServo.attach(9);  // attaches the servo on pin 9 to the servo object
+  LockServo.write(0);   // ensure latch is enguaged
+
   // Start LCD with mission brief
   yourMission();
 
@@ -89,6 +100,7 @@ void loop() {
     checkTemp();
   } else if (start == false) {
     congratsParty();
+    unlockCache();
   }
 }
 
@@ -235,6 +247,24 @@ void yourMission() {
 
 void unlockCache(){
   #ifdef DEBUG
-    Serial.println("Cache Unlocked");
+    Serial.println("Unlock Cache");
   #endif
+
+  if (LOCKED == 1) {
+    #ifdef DEBUG
+      Serial.println("unlocking");
+    #endif
+    
+    LockServo.write(100);
+    delay(2000);
+    LOCKED = 0;
+    
+  } else if (LOCKED == 0) {
+    #ifdef DEBUG
+      Serial.println("locking");
+    #endif
+    
+    LockServo.write(0);
+    //LOCKED = 1;
+  }
 }
