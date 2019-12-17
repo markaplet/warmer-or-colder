@@ -17,6 +17,11 @@ I2C LCD: SCL = A5, SDA = A4
 Servo motor = 9
 */
 
+//#define DEBUG 1           // Enables serial print debugging
+#define TEMP_DELTA    5     // Degree difference hotter or colder than base
+#define LCD_DELAY     4000  // Delay in ms between each LCD message
+#define UNLOCK_DELAY  5000  // Time in ms that cache will be unlocked
+
 // Temperature Probe Libraries
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -33,9 +38,6 @@ Servo motor = 9
 Servo LockServo;        // create servo object to control a servo
 int POS = 0;            // variable to store the servo position
 int LOCKED = 1;         // default lock state
-
-#define TEMP_DELTA 40   //Degree difference hotter or colder than base
-//#define DEBUG 1       //Enables serial print debugging
 
 boolean start = true;   // used to toggle running of main loop
 
@@ -208,35 +210,35 @@ void yourMission() {
   lcd.print("  Geocache  ");
   lcd.print((char) 42);
   lcd.print((char) 42);
-  delay(5000);
+  delay(LCD_DELAY);
   
   lcd.clear();
   lcd.print("Your Mission");
-  delay(5000);
+  delay(LCD_DELAY);
   
   lcd.clear();
   lcd.print("40 Degrees");
   lcd.setCursor (0, 1);
   lcd.print("hotter or colder");
-  delay(5000);
+  delay(LCD_DELAY);
 
   lcd.clear();
   lcd.print("Gently use the");
   lcd.setCursor (0, 1);
   lcd.print("probe and your");
-  delay(5000);
+  delay(LCD_DELAY);
 
   lcd.clear();
   lcd.print("source of hot or");
   lcd.setCursor (0, 1);
   lcd.print("cold to unlock");
-  delay(5000);
+  delay(LCD_DELAY);
 
   lcd.clear();
   lcd.print("USE OF FIRE WILL");
   lcd.setCursor (0, 1);
   lcd.print("DAMAGE THE CACHE");
-  delay(5000);
+  delay(LCD_DELAY);
 
   lcd.clear();
   lcd.print("Are you ready?");
@@ -263,8 +265,8 @@ void unlockCache(){
     playMelody(melodyToPlay, tempoToPlay);
     noTone(tonePin);
     
-    LockServo.write(100);
-    delay(2000);
+    LockServo.write(120);   //120 should be enough to open the lock
+    delay(UNLOCK_DELAY);    // Delay before lock closes again
     LOCKED = 0;
     
   } else if (LOCKED == 0) {
@@ -272,8 +274,7 @@ void unlockCache(){
       Serial.println("locking");
     #endif
     
-    LockServo.write(0);
-    //LOCKED = 1;
+    LockServo.write(0);   // reset the lock after 2 seconds
   }
 }
 
