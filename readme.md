@@ -1,3 +1,5 @@
+![alt text](warmer-colder-logo.jpg "40 degrees Warmer or colder")
+
 # Warmer or Colder
 Used as part of an arduino based puzzle game where contestants must solve a series of challenges to gain access to a locked box. 
 
